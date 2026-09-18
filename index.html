@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Makoto No Kai Karate Do — Versión Definitiva</title>
+<style>
+:root{--navy:#11152b;--navy2:#1b2142;--gold:#d9a441;--bg:#f4f5f8;--card:#fff;--text:#202433;--muted:#6c7285;--line:#e4e6ed;--ok:#269b78;--danger:#c94b4b}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+.app{display:flex;min-height:100vh}.sidebar{width:250px;background:var(--navy);color:#fff;padding:20px 14px;position:fixed;inset:0 auto 0 0}
+.brand{display:flex;gap:10px;align-items:center;padding:6px 8px 22px;border-bottom:1px solid #343955}.logo{width:44px;height:44px;border:2px solid var(--gold);border-radius:50%;display:grid;place-items:center;font-weight:700;color:var(--gold)}.brand b{display:block}.brand small{color:#c5c9d8}
+.nav{margin-top:18px}.nav button{width:100%;background:none;border:0;color:#dce0ed;text-align:left;padding:12px;border-radius:9px;margin:2px 0;font-size:15px;cursor:pointer}.nav button:hover,.nav button.active{background:var(--navy2);color:#fff}
+.main{margin-left:250px;width:calc(100% - 250px);padding:25px;max-width:1500px}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:22px}.top h1{margin:0;font-size:28px}.top p{margin:5px 0;color:var(--muted)}
+button{border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:600}.gold{background:var(--gold);color:#111}.primary{background:var(--navy);color:#fff}.light{background:#eef0f5;color:#303548}.danger{background:#fbeaea;color:#a83838}
+.panel,.card{background:#fff;border:1px solid var(--line);border-radius:13px;padding:20px;margin-bottom:20px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px}.toolbar input,.toolbar select,.form input,.form select,.form textarea{padding:10px;border:1px solid #d9dce5;border-radius:8px;width:100%;font:inherit}.search{flex:1;min-width:220px}
+.tablewrap{overflow:auto}.table{width:100%;border-collapse:collapse}.table th,.table td{text-align:left;padding:12px;border-bottom:1px solid var(--line);white-space:nowrap}.badge{padding:5px 8px;border-radius:999px;font-size:12px}.ok{background:#e6f5ef;color:#197557}.pending{background:#fff1d9;color:#93600b}
+.page.hidden{display:none}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.metric{font-size:30px;font-weight:700}.label{color:var(--muted);font-size:13px}
+.profile{display:grid;grid-template-columns:180px 1fr;gap:20px}.avatar{width:150px;height:150px;border-radius:50%;background:#eef0f5;display:grid;place-items:center;font-size:55px}.profile h2{margin:0}.muted{color:var(--muted)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}.tabs button.active{background:var(--navy);color:#fff}.tab{display:none}.tab.active{display:block}
+.formgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.full{grid-column:1/-1}.form label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
+.record{border:1px solid var(--line);border-radius:10px;padding:12px;margin:8px 0;background:#fafbfc}.empty{text-align:center;padding:30px;color:var(--muted)}
+.modal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;padding:20px;z-index:30}.modal.open{display:flex}.modalbox{background:#fff;border-radius:14px;width:min(760px,100%);max-height:92vh;overflow:auto;padding:22px}.modalhead{display:flex;justify-content:space-between;align-items:center}.close{background:#eee}
+.notice{padding:12px 14px;border-radius:9px;background:#fff7e3;border:1px solid #f0d99e;margin-bottom:18px}
+@media(max-width:900px){.sidebar{width:70px;padding:15px 8px}.brand div:last-child{display:none}.nav button{font-size:20px;text-align:center}.main{margin-left:70px;width:calc(100% - 70px);padding:16px}.cards{grid-template-columns:repeat(2,1fr)}.profile{grid-template-columns:1fr}.formgrid{grid-template-columns:1fr}}
+@media(max-width:600px){.cards{grid-template-columns:1fr 1fr}.top{align-items:flex-start}.top h1{font-size:22px}.profile .avatar{margin:auto}.table th:nth-child(3),.table td:nth-child(3){display:none}}
+
+.photoBox{width:150px;height:150px;border-radius:14px;border:2px dashed #cfd3de;background:#f7f8fa;display:grid;place-items:center;overflow:hidden}.photoBox img{width:100%;height:100%;object-fit:cover}.miniActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.history{width:100%;border-collapse:collapse}.history th,.history td{padding:9px;border-bottom:1px solid var(--line);text-align:left}.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{padding:12px;border:1px solid var(--line);border-radius:10px;background:#fafbfc}.stat b{display:block;font-size:20px;margin-top:4px}
+@media print{.sidebar,.top,.tabs button,.miniActions,.close{display:none!important}.main{margin:0;width:100%;padding:0}.modal{position:static;background:white;padding:0}.modalbox{box-shadow:none;width:100%;max-height:none}.profile{grid-template-columns:150px 1fr}}
+</style>
+
+<style>
+.profile-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}
+.profile-card{background:#f8fafc;border:1px solid #e5e7eb;border-radius:14px;padding:16px}
+.profile-card h3{margin:0 0 10px;font-size:16px}
+.profile-photo{width:110px;height:110px;border-radius:16px;object-fit:cover;border:1px solid #ddd}
+.profile-kv{display:grid;grid-template-columns:150px 1fr;gap:7px;font-size:14px}
+.profile-kv b{color:#475569}
+.profile-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+.profile-tabs button{border:1px solid #ddd;background:#fff;border-radius:10px;padding:9px 12px;cursor:pointer}
+@media(max-width:700px){.profile-grid{grid-template-columns:1fr}.profile-kv{grid-template-columns:1fr}}
+</style>
+
+<style>
+.final-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:14px}
+.final-card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:16px}
+.final-card .big{font-size:28px;font-weight:800;margin-top:5px}
+.final-card .small{font-size:12px;color:#64748b}
+@media(max-width:800px){.final-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar"><div class="brand"><div class="logo">MK</div><div><b>MAKOTO NO KAI</b><small>SHUDŌ KAN · KARATE-DO</small></div></div>
+<nav class="nav"><button class="active" onclick="showPage('dashboard')">⌂ Inicio</button><button onclick="showPage('alumnos')">👥 Alumnos</button><button onclick="showPage('asistencia')">✓ Asistencia</button><button onclick="showPage('pagos')">💳 Mensualidades</button><button onclick="showPage('examenes')">🥋 Exámenes</button><button onclick="showPage('competencias')">🏆 Competencias</button></nav></aside>
+<main class="main">
+<section id="dashboard" class="page"><div class="top"><div><h1>Control del Dojo</h1><p>Panel del Sensei · Sistema integral del dojo</p></div><div><button class="gold" onclick="openStudent()">＋ Nuevo alumno</button> <button class="light" onclick="exportBackup()">⬇ Respaldo</button> <button class="light" onclick="document.getElementById('importFile').click()">⬆ Restaurar</button><input id="importFile" type="file" accept=".json" style="display:none" onchange="importBackup(event)"></div></div>
+<div class="notice"><b>Modo independiente:</b> los datos se guardan localmente en este navegador. Esta versión no modifica ni depende de Base44. Usa <b>⬇ Respaldo</b> con frecuencia para conservar una copia.</div>
+<div class="cards"><div class="card"><div class="label">Alumnos activos</div><div class="metric" id="mStudents">0</div></div><div class="card"><div class="label">Presentes hoy</div><div class="metric" id="mPresent">0</div></div><div class="card"><div class="label">Pagos pendientes</div><div class="metric" id="mPending">0</div></div><div class="card"><div class="label">Competencias</div><div class="metric" id="mComp">0</div></div></div>
+<div class="panel"><h2>Accesos rápidos</h2><button class="primary" onclick="showPage('alumnos')">👥 Administrar alumnos</button></div>
+<div class="panel"><h2>Resumen del dojo</h2><div id="dojoSummary"></div></div></section>
+
+<div class="notice"><b>Expediente profesional:</b> cada alumno puede tener fotografía, datos personales, información de karate, tutor, emergencia, seguimiento y observaciones.</div>
+<section id="alumnos" class="page hidden"><div class="top"><div><h1>Alumnos</h1><p>Expedientes individuales</p></div><button class="gold" onclick="openStudent()">＋ Nuevo alumno</button></div>
+<div class="panel"><div class="toolbar"><input class="search" id="search" placeholder="Buscar alumno..." oninput="renderStudents()"><select id="gradeFilter" onchange="renderStudents()"><option value="">Todos los grados</option></select></div>
+<div class="tablewrap"><table class="table"><thead><tr><th>Alumno</th><th>Grado</th><th>Teléfono</th><th>Pago</th><th>Asistencia</th><th></th></tr></thead><tbody id="studentsBody"></tbody></table></div></div></section>
+
+<section id="asistencia" class="page hidden"><div class="top"><div><h1>Asistencia</h1><p>Registro diario</p></div></div><div class="panel" id="attendance"></div></section>
+<section id="pagos" class="page hidden"><div class="top"><div><h1>Mensualidades</h1><p>Control de pagos</p></div></div>
+<div class="final-grid"><div class="final-card"><div class="small">Alumnos al día</div><div class="big" id="payOk">0</div></div><div class="final-card"><div class="small">Pagos pendientes</div><div class="big" id="payPending">0</div></div><div class="final-card"><div class="small">Ingresos registrados</div><div class="big" id="payTotal">$0</div></div></div>
+<div class="panel" id="payments"></div></section>
+<section id="examenes" class="page hidden"><div class="top"><div><h1>Exámenes</h1><p>Historial de grados y evaluaciones</p></div></div><div class="panel"><p class="muted">Los exámenes se registran desde el expediente individual.</p><div id="examsGlobalList"></div></p></div></section>
+<section id="competencias" class="page hidden"><div class="top"><div><h1>Competencias</h1><p>Historial competitivo</p></div></div><div class="panel"><p class="muted">Las competencias se registran desde el expediente individual.</p></div></section>
+</main></div>
+
+<div class="modal" id="studentModal"><div class="modalbox"><div class="modalhead"><h2 id="modalTitle">Nuevo alumno</h2><button class="close" onclick="closeModal()">✕</button></div>
+<form class="form" onsubmit="saveStudent(event)"><div class="formgrid">
+<div><label>Nombre completo</label><input id="f_name" required></div><div><label>Fecha de nacimiento</label><input id="f_birth" type="date"></div>
+<div><label>Teléfono</label><input id="f_phone"></div><div><label>Correo electrónico</label><input id="f_email" type="email"></div>
+<div><label>Dirección</label><input id="f_address"></div><div><label>Padre / madre / tutor</label><input id="f_guardian"></div>
+<div><label>Teléfono de emergencia</label><input id="f_emergency"></div><div><label>Fecha de ingreso</label><input id="f_join" type="date"></div>
+<div><label>Grado / cinturón</label><select id="f_grade"></select></div><div><label>Grupo / horario</label><input id="f_group"></div>
+<div><label>Estado</label><select id="f_status"><option>Activo</option><option>Inactivo</option></select></div><div><label>Estado de pago</label><select id="f_payment"><option>Al día</option><option>Pendiente</option></select></div>
+<div class="full"><label>Fotografía</label><input id="f_photo" type="file" accept="image/*"></div><div class="full"><label>Historial de grados (uno por línea, opcional)</label><textarea id="f_gradeHistory" rows="3"></textarea></div><div class="full"><label>Observaciones del Sensei</label><textarea id="f_notes" rows="4"></textarea></div>
+</div><div style="margin-top:18px;text-align:right"><button type="button" class="light" onclick="closeModal()">Cancelar</button> <button class="gold">Guardar alumno</button></div></form></div></div>
+
+<div class="modal" id="profileModal"><div class="modalbox"><div class="modalhead"><h2 id="p_name"></h2><button class="close" onclick="closeProfile()">✕</button></div><div id="profileContent"></div></div></div>
+
+<script>
+const grades=["7mo. Kyu — Cinta Blanca","6to. Kyu — Cinta Blanca","5to. Kyu — Cinta Amarilla","4to. Kyu — Cinta Naranja","3er. Kyu — Cinta Verde","2do. Kyu — Cinta Azul","1er. Kyu — Cinta Café","1er. Dan — Cinta Negra","2do. Dan — Cinta Negra","3er. Dan — Cinta Negra","4to. Dan — Cinta Negra"];
+let data=JSON.parse(localStorage.getItem("makoto_final")||localStorage.getItem("makoto_v2")||"null")||{students:[],attendance:{},payments:[],exams:[],competitions:[]};let editId=null;
+const save=()=>localStorage.setItem("makoto_final",JSON.stringify(data));
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function showPage(id){document.querySelectorAll(".page").forEach(x=>x.classList.toggle("hidden",x.id!==id));document.querySelectorAll(".nav button").forEach((b,i)=>b.classList.toggle("active",["dashboard","alumnos","asistencia","pagos","examenes","competencias"][i]===id));if(id==="alumnos")renderStudents();if(id==="asistencia")renderAttendance();if(id==="pagos")renderPayments();if(id==="examenes"||id==="competencias")renderGlobalFollowup();renderFinalSummary();updateMetrics()}
+function updateMetrics(){mStudents.textContent=data.students.filter(s=>s.status!=="Inactivo").length;mPresent.textContent=data.students.filter(s=>data.attendance[new Date().toISOString().slice(0,10)+"_"+s.id]).length;mPending.textContent=data.students.filter(s=>s.payment==="Pendiente").length;mComp.textContent=data.competitions.length;
+let p=data.students.filter(s=>s.payment==="Pendiente").map(s=>`<div class="record">💳 <b>${esc(s.name)}</b> tiene mensualidad pendiente <button class="light" style="float:right" onclick="openProfile('${s.id}')">Ver expediente</button></div>`).join("");
+dashboardAlerts.innerHTML=p||'<div class="empty">No hay mensualidades pendientes.</div>'}
+function init(){gradeFilter.innerHTML='<option value="">Todos los grados</option>'+grades.map(g=>`<option>${esc(g)}</option>`).join("");f_grade.innerHTML=grades.map(g=>`<option>${esc(g)}</option>`).join("");renderStudents();updateMetrics()}
+function renderStudents(){let q=(search.value||"").toLowerCase(),g=gradeFilter.value;let a=data.students.filter(s=>(s.name||"").toLowerCase().includes(q)&&(!g||s.grade===g));studentsBody.innerHTML=a.length?a.map(s=>`<tr><td><b>${esc(s.name)}</b><br><small class="muted">${esc(s.status||"Activo")}</small></td><td>${esc(s.grade)}</td><td>${esc(s.phone||"—")}</td><td><span class="badge ${s.payment==="Al día"?"ok":"pending"}">${esc(s.payment||"Pendiente")}</span></td><td>${attendancePct(s.id)}%</td><td><button class="primary" onclick="openProfile('${s.id}')">Expediente</button> <button class="light" onclick="openStudent('${s.id}')">Editar</button></td></tr>`).join(""):'<tr><td colspan="6" class="empty">No hay alumnos. Pulsa “Nuevo alumno”.</td></tr>'}
+function calcAge(b){if(!b)return"—";let d=new Date(b),n=new Date(),a=n.getFullYear()-d.getFullYear();if(n.getMonth()<d.getMonth()||(n.getMonth()===d.getMonth()&&n.getDate()<d.getDate()))a--;return a+" años"}
+function attendancePct(id){let vals=Object.keys(data.attendance).filter(k=>k.endsWith("_"+id));return vals.length?Math.round(vals.filter(k=>data.attendance[k]).length/vals.length*100):0}
+function openStudent(id=null){editId=id;let s=data.students.find(x=>x.id===id);modalTitle.textContent=s?"Editar alumno":"Nuevo alumno";["name","birth","phone","email","address","guardian","emergency","join","group","notes","gradeHistory"].forEach(k=>document.getElementById("f_"+k).value=s?.[k]||"");f_grade.value=s?.grade||grades[0];f_status.value=s?.status||"Activo";f_payment.value=s?.payment||"Pendiente";studentModal.classList.add("open")}
+function closeModal(){studentModal.classList.remove("open")}
+function saveStudent(e){e.preventDefault();let s=editId?data.students.find(x=>x.id===editId):{id:crypto.randomUUID(),created:new Date().toISOString()};["name","birth","phone","email","address","guardian","emergency","join","group","notes","gradeHistory"].forEach(k=>s[k]=document.getElementById("f_"+k).value.trim());s.grade=f_grade.value;s.status=f_status.value;s.payment=f_payment.value;s.updated=new Date().toISOString().slice(0,10);if(!editId)data.students.push(s);save();closeModal();renderStudents();updateMetrics()}
+function openProfile(id){let s=data.students.find(x=>x.id===id);if(!s)return;p_name.textContent=s.name;profileContent.innerHTML=`<div class="profile"><div><div class="photoBox">${s.photo?`<img src="${s.photo}" alt="Foto">`:"🥋"}</div><div class="miniActions"><button class="light" onclick="printProfile()">🖨 Imprimir</button><button class="light" onclick="exportBackup()">⬇ Respaldo</button></div></div><div><h2>${esc(s.grade)}</h2><p class="muted">${esc(s.status)} · ${esc(s.payment)}</p><p><b>Edad:</b> ${calcAge(s.birth)}<br><b>Ingreso:</b> ${esc(s.join||"—")}<br><b>Última actualización:</b> ${esc(s.updated||"—")}<br><b>Teléfono:</b> ${esc(s.phone||"—")}<br><b>Correo:</b> ${esc(s.email||"—")}<br><b>Tutor:</b> ${esc(s.guardian||"—")}<br><b>Emergencia:</b> ${esc(s.emergency||"—")}</p><p><b>Dirección:</b> ${esc(s.address||"—")}</p><p><b>Observaciones:</b> ${esc(s.notes||"—")}</p><div class="statgrid"><div class="stat">Asistencia<b>${attendancePct(s.id)}%</b></div><div class="stat">Exámenes<b>${data.exams.filter(x=>x.studentId===s.id).length}</b></div><div class="stat">Competencias<b>${data.competitions.filter(x=>x.studentId===s.id).length}</b></div></div></div></div><div class="tabs"><button class="active" onclick="tab(this,'t1')">Asistencia</button><button onclick="tab(this,'t2')">Mensualidades</button><button onclick="tab(this,'t3')">Exámenes</button><button onclick="tab(this,'t4')">Competencias</button></div><div id="t1" class="tab active"><p>Asistencia registrada: <b>${attendancePct(s.id)}%</b></p><button class="primary" onclick="markToday('${s.id}')">✓ Marcar presente hoy</button></div><div id="t2" class="tab"><p>Estado actual: <b>${esc(s.payment||"Pendiente")}</b></p>
+<div class="formgrid"><div><label>Mes</label><input id="payMonth" type="month"></div><div><label>Importe</label><input id="payAmount" type="number" min="0" step="0.01" placeholder="0.00"></div><div><label>Método</label><select id="payMethod"><option>Efectivo</option><option>Transferencia</option><option>Tarjeta</option><option>Otro</option></select></div></div>
+<div class="miniActions"><button class="primary" onclick="registerPayment('${s.id}')">＋ Registrar pago</button><button class="light" onclick="togglePayment('${s.id}')">Cambiar estado</button></div><div id="payList"></div></div><div id="t3" class="tab"><div id="gradeHistoryList"></div><div id="examList"></div><button class="primary" onclick="addExam('${s.id}')">＋ Registrar examen</button></div><div id="t4" class="tab"><div id="compList"></div><button class="primary" onclick="addComp('${s.id}')">＋ Registrar competencia</button></div><div style="margin-top:20px"><button class="light" onclick="openStudent('${s.id}');closeProfile()">✎ Editar expediente</button> <button class="danger" onclick="deleteStudent('${s.id}')">🗑 Eliminar</button></div>`;profileModal.classList.add("open");renderProfileLists(id);renderPaymentList(id);renderGradeHistory(s)}
+function closeProfile(){profileModal.classList.remove("open")}
+function tab(btn,id){btn.parentElement.querySelectorAll("button").forEach(b=>b.classList.remove("active"));btn.classList.add("active");btn.parentElement.parentElement.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));document.getElementById(id).classList.add("active")}
+function markToday(id){let key=new Date().toISOString().slice(0,10)+"_"+id;data.attendance[key]=true;save();openProfile(id);updateMetrics()}
+function deleteStudent(id){let s=data.students.find(x=>x.id===id);if(!s)return;if(!confirm("¿Eliminar definitivamente el expediente de "+s.name+"? Esta acción no se puede deshacer salvo que tengas un respaldo."))return;data.students=data.students.filter(x=>x.id!==id);Object.keys(data.attendance).forEach(k=>{if(k.endsWith("_"+id))delete data.attendance[k]});data.payments=data.payments.filter(x=>x.studentId!==id);data.exams=data.exams.filter(x=>x.studentId!==id);data.competitions=data.competitions.filter(x=>x.studentId!==id);save();closeProfile();renderStudents();updateMetrics()}
+function togglePayment(id){let s=data.students.find(x=>x.id===id);s.payment=s.payment==="Al día"?"Pendiente":"Al día";save();openProfile(id);renderStudents();updateMetrics()}
+function addExam(id){let grade=prompt("Grado presentado:");if(!grade)return;let result=prompt("Resultado / observaciones:")||"";data.exams.push({id:crypto.randomUUID(),studentId:id,date:new Date().toISOString().slice(0,10),grade,result});save();renderProfileLists(id)}
+function addComp(id){let name=prompt("Nombre de la competencia:");if(!name)return;let result=prompt("Resultado / medalla:")||"";data.competitions.push({id:crypto.randomUUID(),studentId:id,date:new Date().toISOString().slice(0,10),name,result});save();renderProfileLists(id);updateMetrics()}
+function deletePayment(id,studentId){if(!confirm("¿Eliminar este pago del historial?"))return;data.payments=data.payments.filter(x=>x.id!==id);save();openProfile(studentId)}
+function registerPayment(id){let month=payMonth.value||new Date().toISOString().slice(0,7),amount=Number(payAmount.value||0),method=payMethod.value;data.payments.push({id:crypto.randomUUID(),studentId:id,month,amount,method,date:new Date().toISOString().slice(0,10)});let s=data.students.find(x=>x.id===id);s.payment="Al día";save();openProfile(id);renderStudents();updateMetrics()}
+function renderPaymentList(id){let el=document.getElementById("payList");if(!el)return;let a=data.payments.filter(x=>x.studentId===id).sort((x,y)=>y.date.localeCompare(x.date));el.innerHTML='<h3>Historial de pagos</h3>'+(a.length?a.map(x=>`<div class="record"><b>${esc(x.month)}</b> · $${Number(x.amount||0).toFixed(2)} · ${esc(x.method)} <small class="muted">(${esc(x.date)})</small> <button class="danger" style="float:right;padding:5px 8px" onclick="deletePayment('${x.id}','${id}')">Eliminar</button></div>`).join(""):'<div class="empty">Sin pagos registrados.</div>')}
+function renderGradeHistory(s){let el=document.getElementById("gradeHistoryList");if(!el)return;let h=(s.gradeHistory||"").split("\n").map(x=>x.trim()).filter(Boolean);el.innerHTML='<h3>Historial de grados</h3>'+(h.length?h.map(x=>`<div class="record">🥋 ${esc(x)}</div>`).join(""):'<div class="empty">Sin historial registrado.</div>')}
+function renderProfileLists(id){let e=data.exams.filter(x=>x.studentId===id),c=data.competitions.filter(x=>x.studentId===id);let el=document.getElementById("examList"),cl=document.getElementById("compList");if(el)el.innerHTML=e.length?e.map(x=>`<div class="record"><b>${esc(x.date)} · ${esc(x.grade)}</b><br>${esc(x.result)}</div>`).join(""):'<div class="empty">Sin exámenes registrados.</div>';if(cl)cl.innerHTML=c.length?c.map(x=>`<div class="record"><b>${esc(x.date)} · ${esc(x.name)}</b><br>${esc(x.result)}</div>`).join(""):'<div class="empty">Sin competencias registradas.</div>'}
+function renderAttendance(){let d=new Date().toISOString().slice(0,10);attendance.innerHTML=`<div class="toolbar"><input type="date" id="attDate" value="${d}" onchange="renderAttendance()"></div>`+data.students.map(s=>{let key=(document.getElementById('attDate')?.value||d)+"_"+s.id;return`<div class="record"><b>${esc(s.name)}</b> · ${esc(s.grade)} <button style="float:right" class="${data.attendance[key]?"gold":"light"}" onclick="setAttendance('${s.id}',document.getElementById('attDate').value)">${data.attendance[key]?"✓ Presente":"Marcar presente"}</button></div>`}).join("")}
+function setAttendance(id,d){data.attendance[d+"_"+id]=true;save();renderAttendance();renderFinalSummary();updateMetrics()}
+function renderPayments(){payments.innerHTML=data.students.map(s=>`<div class="record"><b>${esc(s.name)}</b> — ${esc(s.payment||"Pendiente")} <button style="float:right" class="light" onclick="togglePayment('${s.id}');renderPayments()">${s.payment==="Al día"?"Marcar pendiente":"Marcar pagado"}</button></div>`).join("")||'<div class="empty">No hay alumnos registrados.</div>'}
+
+function resizePhoto(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>{const img=new Image();img.onload=()=>{const c=document.createElement("canvas"),max=700,scale=Math.min(1,max/Math.max(img.width,img.height));c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);c.getContext("2d").drawImage(img,0,0,c.width,c.height);resolve(c.toDataURL("image/jpeg",.78))};img.onerror=reject;img.src=r.result};r.onerror=reject;r.readAsDataURL(file)})}
+function printProfile(){window.print()}
+function exportBackup(){const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="makoto-no-kai-respaldo.json";a.click();URL.revokeObjectURL(a.href)}
+function importBackup(ev){const file=ev.target.files[0];if(!file)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);if(!x||!Array.isArray(x.students)||!x.attendance)throw Error();if(!confirm("Esto reemplazará los datos locales actuales por el respaldo. ¿Continuar?"))return;data=x;save();init();alert("Respaldo restaurado correctamente.")}catch(e){alert("El archivo no parece ser un respaldo válido de Makoto No Kai.")}};r.readAsText(file)}
+
+
+function renderGlobalFollowup(){
+  const ex=document.getElementById("examsGlobalList");
+  const co=document.getElementById("competitionsGlobalList");
+  if(ex){
+    ex.innerHTML=data.exams.length
+      ? data.exams.slice().reverse().map(x=>{const s=data.students.find(a=>a.id===x.studentId);return `<div class="record"><b>${esc(s?.name||"Alumno eliminado")}</b><br>${esc(x.date||"")} · ${esc(x.grade||"")}<br>${esc(x.result||"")}</div>`}).join("")
+      : '<div class="empty">No hay exámenes registrados.</div>';
+  }
+  if(co){
+    co.innerHTML=data.competitions.length
+      ? data.competitions.slice().reverse().map(x=>{const s=data.students.find(a=>a.id===x.studentId);return `<div class="record"><b>${esc(s?.name||"Alumno eliminado")}</b><br>${esc(x.date||"")} · ${esc(x.name||"")}<br>${esc(x.result||"")}</div>`}).join("")
+      : '<div class="empty">No hay competencias registradas.</div>';
+  }
+}
+
+
+function renderFinalSummary(){
+  const active=data.students.filter(s=>s.status!=="Inactivo").length;
+  const pending=data.students.filter(s=>s.payment==="Pendiente").length;
+  const ok=data.students.filter(s=>s.payment==="Al día").length;
+  const total=data.payments.reduce((sum,p)=>sum+(Number(p.amount)||0),0);
+  const ds=document.getElementById("dojoSummary");
+  if(ds) ds.innerHTML=`<div class="final-grid">
+    <div class="final-card"><div class="small">Alumnos activos</div><div class="big">${active}</div></div>
+    <div class="final-card"><div class="small">Mensualidades al día</div><div class="big">${ok}</div></div>
+    <div class="final-card"><div class="small">Pendientes</div><div class="big">${pending}</div></div>
+  </div>`;
+  const a=document.getElementById("payOk"),b=document.getElementById("payPending"),c=document.getElementById("payTotal");
+  if(a)a.textContent=ok;
+  if(b)b.textContent=pending;
+  if(c)c.textContent="$"+total.toLocaleString("es-MX",{minimumFractionDigits:0,maximumFractionDigits:2});
+}
+
+init();
+renderGlobalFollowup();
+renderFinalSummary();
+</script></body></html>
