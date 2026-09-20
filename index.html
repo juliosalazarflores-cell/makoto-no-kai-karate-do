@@ -54,7 +54,141 @@ button{border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:6
 @media(max-width:800px){.final-grid{grid-template-columns:1fr}}
 </style>
 </head>
-<body>
+<body><style>
+#loginScreen{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#111;
+  padding:20px;
+}
+#loginBox{
+  width:100%;
+  max-width:400px;
+  background:#fff;
+  padding:30px;
+  border-radius:16px;
+  box-shadow:0 10px 40px rgba(0,0,0,.35);
+  text-align:center;
+}
+#loginBox h1{
+  margin:0 0 8px;
+}
+#loginBox p{
+  color:#666;
+}
+#loginBox input{
+  width:100%;
+  box-sizing:border-box;
+  padding:12px;
+  margin:8px 0;
+  border:1px solid #ccc;
+  border-radius:8px;
+}
+#loginBox button{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border:0;
+  border-radius:8px;
+  cursor:pointer;
+}
+#loginButton{
+  background:#111;
+  color:#fff;
+}
+#loginMessage{
+  margin-top:12px;
+  color:#b00020;
+}
+.app{
+  display:none;
+}
+</style>
+
+<div id="loginScreen">
+  <div id="loginBox">
+    <h1>🥋 Makoto No Kai</h1>
+    <p>Acceso del Sensei</p>
+
+    <input
+      id="loginEmail"
+      type="email"
+      placeholder="Correo electrónico"
+      autocomplete="email"
+    >
+
+    <input
+      id="loginPassword"
+      type="password"
+      placeholder="Contraseña"
+      autocomplete="current-password"
+    >
+
+    <button id="loginButton">Iniciar sesión</button>
+
+    <div id="loginMessage"></div>
+  </div>
+</div><script>
+const loginScreen = document.getElementById("loginScreen");
+const loginButton = document.getElementById("loginButton");
+const loginMessage = document.getElementById("loginMessage");
+const app = document.querySelector(".app");
+
+function mostrarApp() {
+  loginScreen.style.display = "none";
+  app.style.display = "";
+}
+
+function mostrarLogin() {
+  loginScreen.style.display = "flex";
+  app.style.display = "none";
+}
+
+loginButton.addEventListener("click", async () => {
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
+
+  loginMessage.textContent = "";
+
+  if (!email || !password) {
+    loginMessage.textContent = "Escribe tu correo y contraseña.";
+    return;
+  }
+
+  loginButton.disabled = true;
+  loginButton.textContent = "Ingresando...";
+
+  const { error } = await supabaseClient.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    loginMessage.textContent = "Correo o contraseña incorrectos.";
+    loginButton.disabled = false;
+    loginButton.textContent = "Iniciar sesión";
+    return;
+  }
+
+  mostrarApp();
+});
+
+async function comprobarSesion() {
+  const { data } = await supabaseClient.auth.getSession();
+
+  if (data.session) {
+    mostrarApp();
+  } else {
+    mostrarLogin();
+  }
+}
+
+comprobarSesion();
+</script>
 <div class="app">
 <aside class="sidebar"><div class="brand"><div class="logo"><img src="./icon-192.png" alt="Makoto No Kai"></div><div><b>MAKOTO NO KAI</b><small>SHUDŌ KAN · KARATE-DO</small></div></div>
 <nav class="nav"><button class="active" onclick="showPage('dashboard')">⌂ Inicio</button><button onclick="showPage('alumnos')">👥 Alumnos</button><button onclick="showPage('asistencia')">✓ Asistencia</button><button onclick="showPage('pagos')">💳 Mensualidades</button><button onclick="showPage('examenes')">🥋 Exámenes</button><button onclick="showPage('competencias')">🏆 Competencias</button></nav></aside>
@@ -91,7 +225,20 @@ button{border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:6
 
 <div class="modal" id="profileModal"><div class="modalbox"><div class="modalhead"><h2 id="p_name"></h2><button class="close" onclick="closeProfile()">✕</button></div><div id="profileContent"></div></div></div>
 
+<script>src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
+const SUPABASE_URL = "https://nmhfoxuaauwlfihubptg.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_VdJHtNelVv53CK8lV5XE6g_TFk4AGME";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+</script>
+
+<script>
+const grades=[...]
 const grades=["7mo. Kyu — Cinta Blanca","6to. Kyu — Cinta Blanca","5to. Kyu — Cinta Amarilla","4to. Kyu — Cinta Naranja","3er. Kyu — Cinta Verde","2do. Kyu — Cinta Azul","1er. Kyu — Cinta Café","1er. Dan — Cinta Negra","2do. Dan — Cinta Negra","3er. Dan — Cinta Negra","4to. Dan — Cinta Negra"];
 let data=JSON.parse(localStorage.getItem("makoto_final")||localStorage.getItem("makoto_v2")||"null")||{students:[],attendance:{},payments:[],exams:[],competitions:[]};let editId=null;
 const save=()=>localStorage.setItem("makoto_final",JSON.stringify(data));
