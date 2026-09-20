@@ -109,13 +109,6 @@ button{border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:6
 }
 </style>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const SUPABASE_URL = "https://nmhfoxuaauwlfihubptg.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_VdJHtNelVv53CK8lV5XE6g_TFk4AGME";
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-</script>
-
 <div id="loginScreen">
   <div id="loginBox">
     <h1>🥋 Makoto No Kai</h1>
@@ -232,9 +225,20 @@ comprobarSesion();
 
 <div class="modal" id="profileModal"><div class="modalbox"><div class="modalhead"><h2 id="p_name"></h2><button class="close" onclick="closeProfile()">✕</button></div><div id="profileContent"></div></div></div>
 
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
+const SUPABASE_URL = "https://nmhfoxuaauwlfihubptg.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_VdJHtNelVv53CK8lV5XE6g_TFk4AGME";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+</script>
+
+<script>
+const grades=[...]
 const grades=["7mo. Kyu — Cinta Blanca","6to. Kyu — Cinta Blanca","5to. Kyu — Cinta Amarilla","4to. Kyu — Cinta Naranja","3er. Kyu — Cinta Verde","2do. Kyu — Cinta Azul","1er. Kyu — Cinta Café","1er. Dan — Cinta Negra","2do. Dan — Cinta Negra","3er. Dan — Cinta Negra","4to. Dan — Cinta Negra"];
 let data=JSON.parse(localStorage.getItem("makoto_final")||localStorage.getItem("makoto_v2")||"null")||{students:[],attendance:{},payments:[],exams:[],competitions:[]};let editId=null;
 const save=()=>localStorage.setItem("makoto_final",JSON.stringify(data));
