@@ -175,8 +175,7 @@ loginButton.addEventListener("click", async () => {
   });
 
   if (error) {
-    loginMessage.textContent = "Correo o contraseña incorrectos.";
-    loginButton.disabled = false;
+loginMessage.textContent = error.message;    loginButton.disabled = false;
     loginButton.textContent = "Iniciar sesión";
     return;
   }
@@ -244,8 +243,80 @@ function updateMetrics(){mStudents.textContent=data.students.filter(s=>s.status!
 let p=data.students.filter(s=>s.payment==="Pendiente").map(s=>`<div class="record">💳 <b>${esc(s.name)}</b> tiene mensualidad pendiente <button class="light" style="float:right" onclick="openProfile('${s.id}')">Ver expediente</button></div>`).join("");
 dashboardAlerts.innerHTML=p||'<div class="empty">No hay mensualidades pendientes.</div>'}
 function init(){gradeFilter.innerHTML='<option value="">Todos los grados</option>'+grades.map(g=>`<option>${esc(g)}</option>`).join("");f_grade.innerHTML=grades.map(g=>`<option>${esc(g)}</option>`).join("");renderStudents();updateMetrics()}
-function renderStudents(){let q=(search.value||"").toLowerCase(),g=gradeFilter.value;let a=data.students.filter(s=>(s.name||"").toLowerCase().includes(q)&&(!g||s.grade===g));studentsBody.innerHTML=a.length?a.map(s=>`<tr><td><b>${esc(s.name)}</b><br><small class="muted">${esc(s.status||"Activo")}</small></td><td>${esc(s.grade)}</td><td>${esc(s.phone||"—")}</td><td><span class="badge ${s.payment==="Al día"?"ok":"pending"}">${esc(s.payment||"Pendiente")}</span></td><td>${attendancePct(s.id)}%</td><td><button class="primary" onclick="openProfile('${s.id}')">Expediente</button> <button class="light" onclick="openStudent('${s.id}')">Editar</button></td></tr>`).join(""):'<tr><td colspan="6" class="empty">No hay alumnos. Pulsa “Nuevo alumno”.</td></tr>'}
-function calcAge(b){if(!b)return"—";let d=new Date(b),n=new Date(),a=n.getFullYear()-d.getFullYear();if(n.getMonth()<d.getMonth()||(n.getMonth()===d.getMonth()&&n.getDate()<d.getDate()))a--;return a+" años"}
+function renderStudents(){
+  let q=(search.value||"").toLowerCase(),
+      g=gradeFilter.value;
+
+  let list=data.students.filter(s=>{
+    return (s.name||"").toLowerCase().includes(q) &&
+           (!g || s.grade===g);
+  });
+
+  studentsBody.innerHTML=list.length
+    ? list.map(s=>{
+        let photo=s.photo
+          ? `<img src="${esc(s.photo)}" alt="" style="width:46px;height:46px;border-radius:50%;object-fit:cover;">`
+          : `<div style="width:46px;height:46px;border-radius:50%;background:#eee;display:flex;align-items:center;justify-content:center;font-size:22px;">🥋</div>`;
+
+        let attendance=attendancePct(s.id);
+        let payment=s.payment==="Al día" ? "ok" : "pending";
+
+        return `
+          <tr>
+            <td>
+              <div style="display:flex;align-items:center;gap:10px;">
+                ${photo}
+                <div>
+                  <b>${esc(s.name)}</b>
+                  <br>
+                  <small>${esc(s.group||"Sin grupo")}</small>
+                </div>
+              </div>
+            </td>
+
+            <td>
+              <b>${esc(s.grade||"Sin grado")}</b>
+            </td>
+
+            <td>
+              ${esc(s.phone||"Sin teléfono")}
+            </td>
+
+            <td>
+              <span class="badge ${payment}">
+                ${esc(s.payment||"Pendiente")}
+              </span>
+            </td>
+
+            <td>
+              <span class="badge ${attendance>=80?"ok":"pending"}">
+                ${attendance}%
+              </span>
+            </td>
+
+            <td>
+              <button class="primary"
+                onclick="openProfile('${s.id}')">
+                Ver expediente
+              </button>
+
+              <button class="light"
+                onclick="openStudent('${s.id}')">
+                Editar
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join("")
+    : `
+      <tr>
+        <td colspan="6" class="empty">
+          No hay alumnos.
+          Pulsa "Nuevo alumno" para agregar uno.
+        </td>
+      </tr>
+    `;
+}function calcAge(b){if(!b)return"—";let d=new Date(b),n=new Date(),a=n.getFullYear()-d.getFullYear();if(n.getMonth()<d.getMonth()||(n.getMonth()===d.getMonth()&&n.getDate()<d.getDate()))a--;return a+" años"}
 function attendancePct(id){let vals=Object.keys(data.attendance).filter(k=>k.endsWith("_"+id));return vals.length?Math.round(vals.filter(k=>data.attendance[k]).length/vals.length*100):0}
 function openStudent(id=null){editId=id;let s=data.students.find(x=>x.id===id);modalTitle.textContent=s?"Editar alumno":"Nuevo alumno";["name","birth","phone","email","address","guardian","emergency","join","group","notes","gradeHistory"].forEach(k=>document.getElementById("f_"+k).value=s?.[k]||"");f_grade.value=s?.grade||grades[0];f_status.value=s?.status||"Activo";f_payment.value=s?.payment||"Pendiente";studentModal.classList.add("open")}
 function closeModal(){studentModal.classList.remove("open")}
