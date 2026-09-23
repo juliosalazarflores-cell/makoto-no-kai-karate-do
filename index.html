@@ -109,16 +109,7 @@ button{border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:6
 }
 </style>
 
-<<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const SUPABASE_URL = "https://nmhfoxuaauwlfihubptg.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_VdJHtNelVv53CK8lV5XE6g_TFk4AGME";
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY
-);
-</script>
-div id="loginScreen">
+<div id="loginScreen">
   <div id="loginBox">
     <h1>🥋 Makoto No Kai</h1>
     <p>Acceso del Sensei</p>
@@ -187,7 +178,54 @@ loginButton.addEventListener("click", async () => {
 });
 
 async function comprobarSesion() {
-  const { data } = await supabaseClient.auth.getSession();
+  const { data, error } = await supabaseClient.auth.getSession();
+
+  if (error) {
+    console.error(error);
+    mostrarLogin();
+    return;
+  }
+
+  const hash = window.location.hash;
+
+  // Detectar recuperación de contraseña
+  if (hash.includes("type=recovery") || hash.includes("access_token=")) {
+    mostrarApp();
+
+    const nuevaPassword = prompt("Escribe tu nueva contraseña:");
+
+    if (!nuevaPassword) {
+      alert("No se cambió la contraseña.");
+      return;
+    }
+
+    if (nuevaPassword.length < 6) {
+      alert("La contraseña debe tener al menos 6 caracteres.");
+      return;
+    }
+
+    const { error: updateError } =
+      await supabaseClient.auth.updateUser({
+        password: nuevaPassword
+      });
+
+    if (updateError) {
+      alert("No se pudo cambiar la contraseña: " + updateError.message);
+      return;
+    }
+
+    alert("Contraseña cambiada correctamente.");
+
+    window.history.replaceState(
+      {},
+      document.title,
+      window.location.pathname
+    );
+
+    await supabaseClient.auth.signOut();
+    mostrarLogin();
+    return;
+  }
 
   if (data.session) {
     mostrarApp();
