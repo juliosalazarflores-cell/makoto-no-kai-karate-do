@@ -1,4 +1,4 @@
-const CACHE = "makoto-no-kai-v3";
+const CACHE = "makoto-no-kai-v4";
 
 const ASSETS = [
   "./",
