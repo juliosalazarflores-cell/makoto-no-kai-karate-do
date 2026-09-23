@@ -139,8 +139,9 @@ const loginMessage = document.getElementById("loginMessage");
 const app = document.querySelector(".app");
 
 function mostrarApp() {
-  loginScreen.style.display = "none";
-  app.style.display = "";
+    loginScreen.style.display = "none";
+    const app = document.querySelector(".app");
+    app.style.display = "";
 }
 
 function mostrarLogin() {
