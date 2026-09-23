@@ -152,11 +152,11 @@ loginButton.addEventListener("click", () => {
   mostrarApp();
 });
 
-window.addEventListener("DOMContentLoaded", comprobarSesion);
+function comprobarSesion() {
   mostrarApp();
 }
 
-
+window.addEventListener("DOMContentLoaded", comprobarSesion);
 comprobarSesion();
 </script>
 <div class="app">
