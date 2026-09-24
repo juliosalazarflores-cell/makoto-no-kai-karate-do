@@ -132,34 +132,7 @@ button{border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:6
 
     <div id="loginMessage"></div>
   </div>
-</div><script>
-const loginScreen = document.getElementById("loginScreen");
-const loginButton = document.getElementById("loginButton");
-const loginMessage = document.getElementById("loginMessage");
-const app = document.querySelector(".app");
-
-function mostrarApp() {
-    loginScreen.style.display = "none";
-    const app = document.querySelector(".app");
-   if (app) app.style.display = "";
-}
-
-function mostrarLogin() {
-  loginScreen.style.display = "flex";
-  app.style.display = "none";
-}
-
-loginButton.addEventListener("click", () => {
-  mostrarApp();
-});
-
-function comprobarSesion() {
-  mostrarApp();
-}
-
-window.addEventListener("DOMContentLoaded", comprobarSesion);
-
-</script>
+</div>
 <div class="app">
 <aside class="sidebar"><div class="brand"><div class="logo"><img src="./icon-192.png" alt="Makoto No Kai"></div><div><b>MAKOTO NO KAI</b><small>SHUDŌ KAN · KARATE-DO</small></div></div>
 <nav class="nav"><button class="active" onclick="showPage('dashboard')">⌂ Inicio</button><button onclick="showPage('alumnos')">👥 Alumnos</button><button onclick="showPage('asistencia')">✓ Asistencia</button><button onclick="showPage('pagos')">💳 Mensualidades</button><button onclick="showPage('examenes')">🥋 Exámenes</button><button onclick="showPage('competencias')">🏆 Competencias</button></nav></aside>
@@ -196,9 +169,33 @@ window.addEventListener("DOMContentLoaded", comprobarSesion);
 
 <div class="modal" id="profileModal"><div class="modalbox"><div class="modalhead"><h2 id="p_name"></h2><button class="close" onclick="closeProfile()">✕</button></div><div id="profileContent"></div></div></div>
 
-
-
 <script>
+const loginScreen = document.getElementById("loginScreen");
+const loginButton = document.getElementById("loginButton");
+const loginMessage = document.getElementById("loginMessage");
+const app = document.querySelector(".app");
+
+function mostrarApp() {
+  if (loginScreen) loginScreen.style.display = "none";
+  if (app) app.style.display = "flex";
+}
+
+function mostrarLogin() {
+  if (loginScreen) loginScreen.style.display = "flex";
+  if (app) app.style.display = "none";
+}
+
+if (loginButton) {
+  loginButton.addEventListener("click", mostrarApp);
+}
+
+function comprobarSesion() {
+  mostrarApp();
+}
+
+comprobarSesion();
+
+
 
 const grades=["7mo. Kyu — Cinta Blanca","6to. Kyu — Cinta Blanca","5to. Kyu — Cinta Amarilla","4to. Kyu — Cinta Naranja","3er. Kyu — Cinta Verde","2do. Kyu — Cinta Azul","1er. Kyu — Cinta Café","1er. Dan — Cinta Negra","2do. Dan — Cinta Negra","3er. Dan — Cinta Negra","4to. Dan — Cinta Negra"];
 let data=JSON.parse(localStorage.getItem("makoto_final")||localStorage.getItem("makoto_v2")||"null")||{students:[],attendance:{},payments:[],exams:[],competitions:[]};let editId=null;
@@ -274,6 +271,4 @@ function renderFinalSummary(){
 }
 
 init();
-renderGlobalFollowup();
-renderFinalSummary();
-</body></html>
+re
