@@ -45,7 +45,17 @@ body.orgMode .clientCredit{display:block;position:fixed;right:10px;bottom:7px;co
 const cfg=window.SUPABASE_CONFIG||{};let sb=null;const isClientKey=(v)=>{v=String(v||'').trim();return (v.startsWith('sb_publishable_')&&v.length>20)||(v.startsWith('eyJ')&&v.length>100)};function makeClient(){const c=window.SUPABASE_CONFIG||{};if(!c.url||!isClientKey(c.publishableKey)||!window.supabase||typeof window.supabase.createClient!=='function')return null;try{return window.supabase.createClient(c.url,c.publishableKey)}catch(e){console.error('Supabase createClient error:',e);return null}}sb=makeClient();let org=null,currentUser=null,isPlatformAdmin=false,platformOrganizations=[],students=[],instructors=[],payments=[],attendance=[],exams=[],competitions=[],notices=[],credentials=[],programs=[];let modalSaveFn=null,editingId=null;
 const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));const today=()=>new Date().toISOString().slice(0,10);const grades=['10.º Kyu','9.º Kyu','8.º Kyu','7.º Kyu','6.º Kyu','5.º Kyu','4.º Kyu','3.º Kyu','2.º Kyu','1.º Kyu','1.º Dan','2.º Dan','3.º Dan','4.º Dan'];
 function toast(m){$('toast').textContent=m;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2800)}function closeModal(){$('genericModal').classList.remove('open');modalSaveFn=null}function field(label,id,type='text',value='',extra=''){return `<div class="field"><label>${label}</label><input id="${id}" type="${type}" value="${esc(value)}" ${extra}></div>`}function selectField(label,id,opts,value=''){return `<div class="field"><label>${label}</label><select id="${id}">${opts.map(o=>`<option ${o===value?'selected':''}>${esc(o)}</option>`).join('')}</select></div>`}
-async function checkPlatformAdmin(){if(!sb||!currentUser)return false;const r=await sb.rpc('is_platform_admin');if(r.error){console.warn('Platform admin check:',r.error.message);return false}return !!r.data}
+async function checkPlatformAdmin(){
+  if(!sb||!currentUser)return false;
+  try{
+    const r=await withTimeout(sb.rpc('is_platform_admin'),5000,'la verificación de administrador');
+    if(r?.error){console.warn('Platform admin check:',r.error.message);return false}
+    return !!r?.data;
+  }catch(e){
+    console.warn('Platform admin check timeout/error:',e?.message||e);
+    return false;
+  }
+}
 function setPlatformVisibility(){document.querySelectorAll('.platformOnly').forEach(el=>el.classList.toggle('platformVisible',isPlatformAdmin));}
 function applyIdentityView(){
   const client=!!currentUser&&!isPlatformAdmin;
@@ -67,11 +77,36 @@ function applyIdentityView(){
   }
 }
 
-async function loadPlatform(){if(!isPlatformAdmin)return;const q=($('platformSearch')?.value||'').toLowerCase();const r=await sb.from('organizations').select('id,name,plan,status,expires_at,phone,email,created_at').order('created_at',{ascending:false});if(r.error)return toast(r.error.message);platformOrganizations=(r.data||[]);const rows=platformOrganizations.filter(o=>(o.name||'').toLowerCase().includes(q));$('platformOrgCount').textContent=platformOrganizations.length;$('platformAdminEmail').textContent=currentUser?.email||'—';$('platformOrgsBody').innerHTML=rows.length?rows.map(o=>`<tr><td><b>${esc(o.name)}</b><br><small>${esc(o.email||'')}</small></td><td>${esc(o.plan||'—')}</td><td>${esc(o.status||'—')}</td><td>${o.expires_at?new Date(o.expires_at).toLocaleDateString('es-MX'):'Sin fecha'}</td><td><button class="btn small" onclick="openPlatformOrg('${o.id}')">Editar</button></td></tr>`).join(''):'<tr><td colspan="5" class="empty">No hay organizaciones.</td></tr>'}
-async function loadPlatformMembers(id){const r=await sb.rpc('platform_get_members',{p_org_id:id});return r.error?[]:(r.data||[])}
+async function loadPlatform(){
+  if(!isPlatformAdmin)return;
+  try{
+    const q=($('platformSearch')?.value||'').toLowerCase();
+    const r=await withTimeout(sb.from('organizations').select('id,name,plan,status,expires_at,phone,email,created_at').order('created_at',{ascending:false}),7000,'organizaciones');
+    if(r.error)return toast(r.error.message);
+    platformOrganizations=(r.data||[]);
+    const rows=platformOrganizations.filter(o=>(o.name||'').toLowerCase().includes(q));
+    $('platformOrgCount').textContent=platformOrganizations.length;
+    $('platformAdminEmail').textContent=currentUser?.email||'—';
+    $('platformOrgsBody').innerHTML=rows.length?rows.map(o=>`<tr><td><b>${esc(o.name)}</b><br><small>${esc(o.email||'')}</small></td><td>${esc(o.plan||'—')}</td><td>${esc(o.status||'—')}</td><td>${o.expires_at?new Date(o.expires_at).toLocaleDateString('es-MX'):'Sin fecha'}</td><td><button class="btn small" onclick="openPlatformOrg('${o.id}')">Editar</button></td></tr>`).join(''):'<tr><td colspan="5" class="empty">No hay organizaciones.</td></tr>';
+  }catch(e){console.warn('loadPlatform:',e);toast('No se pudo cargar Administración: '+(e?.message||e))}
+}
+async function loadPlatformMembers(id){
+  try{
+    const r=await withTimeout(sb.rpc('platform_get_members',{p_org_id:id}),7000,'miembros');
+    return r.error?[]:(r.data||[]);
+  }catch(e){console.warn('loadPlatformMembers:',e);return []}
+}
 function openPlatformOrg(id){if(!isPlatformAdmin)return;const o=platformOrganizations.find(x=>x.id===id)||{name:'',plan:'demo',status:'active',expires_at:'',phone:'',email:''};$('modalTitle').textContent=id?'Editar organización':'Nueva organización';$('modalBody').innerHTML=`<div class="formGrid">${field('Nombre','p_name','text',o.name,'required')}${selectField('Plan','p_plan',['demo','basico','profesional','premium'],o.plan||'demo')}${selectField('Estado','p_status',['active','suspended','expired'],o.status||'active')}${field('Vencimiento','p_expires','date',o.expires_at?String(o.expires_at).slice(0,10):'')}${field('Teléfono','p_phone','text',o.phone||'')}${field('Correo de organización','p_email','email',o.email||'')}${field('Correo del usuario administrador','p_owner_email','email','')}${selectField('Rol del usuario','p_owner_role',['owner','admin','instructor','viewer'],'owner')}</div><p class="note">El usuario debe existir previamente en Authentication de Supabase. Esta acción no crea contraseñas.</p>`;$('genericModal').classList.add('open');modalSaveFn=async()=>{const payload={name:$('p_name').value.trim(),plan:$('p_plan').value,status:$('p_status').value,expires_at:$('p_expires').value||null,phone:$('p_phone').value.trim(),email:$('p_email').value.trim()};if(!payload.name)return toast('Escribe el nombre de la organización');const r=await sb.rpc('platform_save_organization',{p_id:id||null,p_name:payload.name,p_plan:payload.plan,p_status:payload.status,p_expires_at:payload.expires_at||null,p_phone:payload.phone,p_email:payload.email});if(r.error)return toast(r.error.message);const orgId=r.data;const ownerEmail=$('p_owner_email').value.trim();if(ownerEmail){const mr=await sb.rpc('platform_assign_member',{p_org_id:orgId,p_email:ownerEmail,p_role:$('p_owner_role').value});if(mr.error)return toast('Organización guardada, pero no se pudo asignar el usuario: '+mr.error.message)}closeModal();await loadPlatform();toast(id?'Organización actualizada':'Organización creada')};}
 const withTimeout=(promise,ms,label)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error('Tiempo de espera agotado al consultar '+label)),ms))]);
-async function getOrg(){const r=await withTimeout(sb.from('organization_members').select('organization_id,role,organizations(*)').eq('user_id',currentUser.id).limit(1).single(),8000,'la organización');if(r.error)throw r.error;if(!r.data?.organizations)throw new Error('El usuario no tiene una organización asignada.');return r.data.organizations}
+async function getOrg(){
+  const r=await withTimeout(
+    sb.from('organization_members').select('organization_id,role,organizations(*)').eq('user_id',currentUser.id).limit(1).maybeSingle(),
+    8000,'la organización'
+  );
+  if(r.error)throw r.error;
+  if(!r.data?.organizations)throw new Error('El usuario no tiene una organización asignada.');
+  return r.data.organizations;
+}
 async function load(){
   $('status').textContent='Conectando con Supabase...';
   $('status').className='status';
@@ -87,7 +122,7 @@ async function load(){
         return r.data||[];
       }catch(e){console.warn('JSF MAFIGO: '+table,e.message);return []}
     };
-    [students,instructors,payments,attendance,exams,competitions,notices,credentials,programs]=await Promise.all([
+    const results=await Promise.all([
       queryTable('students','created_at'),
       queryTable('instructors','created_at'),
       queryTable('payments','payment_date'),
@@ -98,15 +133,24 @@ async function load(){
       queryTable('credentials','issued_at'),
       queryTable('technical_programs','created_at')
     ]);
-    renderAll();
+    [students,instructors,payments,attendance,exams,competitions,notices,credentials,programs]=results;
+    try{renderAll()}catch(renderError){
+      console.error('JSF MAFIGO renderAll:',renderError);
+      throw new Error('Los datos se conectaron, pero la interfaz no pudo renderizarse: '+(renderError?.message||renderError));
+    }
     $('status').textContent='✓ Conectado correctamente a Supabase';
     $('status').className='status ok';
   }catch(e){
-    $('status').textContent='Error de conexión: '+e.message;
+    console.error('JSF MAFIGO load:',e);
+    $('status').textContent='Error de conexión: '+(e?.message||e);
     $('status').className='status bad';
-    toast(e.message);
+    toast(e?.message||'No se pudo cargar la información');
+    ['recentBody','upcomingBody'].forEach(id=>{
+      const el=$(id); if(el&&el.textContent==='Cargando...')el.textContent='No se pudo cargar la información.';
+    });
   }
 }
+
 function renderAll(){
 $('schoolTitle').textContent=org.name;$('orgName').textContent=org.name;$('orgPlan').textContent=org.plan||'—';$('orgStatus').textContent=org.status||'—';$('orgExpiry').textContent=org.expires_at?new Date(org.expires_at).toLocaleDateString('es-MX'):'Sin fecha';$('orgPhone').textContent=org.phone||'—';$('orgEmail').textContent=org.email||'—';$('setOrg').textContent=org.name;$('setPlan').textContent=org.plan||'—';$('setStatus').textContent=org.status||'—';
 $('mStudents').textContent=students.filter(x=>x.status!=='Inactivo').length;$('mInstructors').textContent=instructors.length;$('mPayments').textContent=payments.length;$('mExams').textContent=exams.length;$('mComp').textContent=competitions.length;$('mNotices').textContent=notices.filter(x=>x.active).length;$('mCred').textContent=credentials.length;const pct=attendance.length?Math.round(attendance.filter(x=>x.status==='Presente').length/attendance.length*100):0;$('mAttendance').textContent=pct+'%';$('rActive').textContent=students.filter(x=>x.status==='Activo').length;$('rPayments').textContent=payments.length;$('rAttendance').textContent=pct+'%';

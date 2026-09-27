@@ -1,0 +1,16 @@
+JSF & MAFIGO SPORT SYSTEMS — CORRECCIÓN DEFINITIVA
+
+Cambios realizados sobre index.html:
+- La comprobación de administrador ya tiene tiempo máximo y no puede bloquear el arranque.
+- La consulta de organización usa maybeSingle() y tiene tiempo máximo.
+- Las consultas de módulos tienen límite individual y cargan de forma tolerante.
+- Si una tabla opcional falla, el resto de la aplicación continúa.
+- Los errores quedan registrados en la consola y el estado deja de mostrar Cargando...
+- Se protege el renderizado para mostrar el error real si la interfaz encuentra un problema.
+
+Cambios realizados sobre sw.js:
+- Se incrementó la versión de caché.
+- index.html se obtiene primero desde la red para evitar servir una versión vieja.
+- Los activos locales continúan con caché para funcionamiento con conectividad limitada.
+
+No se modificaron las claves de Supabase ni se añadió ninguna Secret Key.
