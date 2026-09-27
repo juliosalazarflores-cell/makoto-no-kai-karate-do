@@ -1,0 +1,20 @@
+JSF & MAFIGO SPORT SYSTEMS — ETAPA 3
+
+Se conserva la V2 intacta y esta carpeta es una copia de trabajo.
+
+NUEVO:
+- Panel privado de Administración JSF & MAFIGO.
+- Control de organizaciones, plan, estado y vencimiento.
+- Detección de administrador mediante public.is_platform_admin().
+- Auditoría de acciones de plataforma preparada.
+- El panel no aparece para usuarios normales.
+
+PASO DE BASE DE DATOS:
+1. Abrir database/03_plataforma_admin.sql.
+2. Ejecutarlo en Supabase SQL Editor.
+3. Insertar el UUID del usuario administrador en platform_admins.
+
+IMPORTANTE:
+- Nunca colocar una Secret Key en el navegador.
+- La Publishable Key sí puede estar en la aplicación con RLS correctamente configurado.
+- Esta etapa implementa el panel y la base de autorización; la revisión final de roles y pruebas de aislamiento debe hacerse antes de producción comercial.

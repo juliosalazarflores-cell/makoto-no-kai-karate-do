@@ -1,0 +1,5 @@
+1. Abre index.html.
+2. Si aparece “Configurar conexión”, pega TU Publishable key de Supabase (sb_publishable_...).
+3. Pulsa “Guardar conexión”.
+4. La clave se guarda solo en este navegador (localStorage).
+5. NO uses ni pegues la Secret key (sb_secret_...).

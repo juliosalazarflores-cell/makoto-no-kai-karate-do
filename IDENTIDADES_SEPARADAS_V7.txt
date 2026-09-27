@@ -1,0 +1,16 @@
+V7 — IDENTIDADES SEPARADAS
+
+1. Administrador JSF & MAFIGO:
+   - Ve el banner y la identidad completa de JSF & MAFIGO SPORT SYSTEMS.
+   - Ve Administración JSF & MAFIGO si está autorizado por platform_admins.
+
+2. Profesor/cliente:
+   - Al iniciar sesión, desaparece el banner grande de JSF & MAFIGO.
+   - La barra superior muestra el nombre de su organización.
+   - Se usa el escudo de la organización; para Makoto-No-Kai se usa assets/1000342094(2).png.
+   - No se muestra el pie corporativo grande.
+   - Solo queda una leyenda discreta de administración de plataforma.
+
+3. El profesor no puede cambiar desde esta interfaz el código, la estructura, la seguridad, el plan, la vigencia ni los activos de marca controlados por JSF & MAFIGO.
+
+4. V6 se conserva intacta como respaldo.

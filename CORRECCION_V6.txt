@@ -1,0 +1,16 @@
+JSF & MAFIGO SPORT SYSTEMS - V6 CORREGIDA
+
+Corrección aplicada:
+- La carga de Supabase ya no puede quedar bloqueada indefinidamente por una consulta.
+- Cada consulta tiene un tiempo máximo de 7 segundos.
+- La consulta de organización tiene un máximo de 8 segundos.
+- Si una tabla no existe o tiene un error, el resto del sistema continúa cargando.
+- El estado de conexión muestra el error concreto.
+- No se cambió la estructura visual ni la información de Makoto-No-Kai.
+- No contiene Secret Keys.
+
+Prueba:
+1. Abre index.html en Chrome incógnito.
+2. La Publishable Key ya guardada se utilizará desde localStorage del modo incógnito.
+3. Inicia sesión.
+4. El dashboard debe dejar de quedarse en "Conectando...".

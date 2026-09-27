@@ -1,0 +1,45 @@
+JSF & MAFIGO SPORT SYSTEMS
+PRODUCCION DEFINITIVA
+
+Esta version V4 corrige la instalacion para no fallar si las tablas opcionales del expediente o el panel de plataforma aun no existen.
+
+INCLUYE:
+- Panel de plataforma JSF & MAFIGO.
+- Organizaciones, planes, estado y vencimiento.
+- Asignacion segura de usuarios por organizacion.
+- Aislamiento multi-organizacion mediante RLS.
+- Acceso operativo condicionado a organizacion activa y vigencia.
+- Roles owner/admin/instructor/viewer.
+- Auditoria de acciones de plataforma.
+- Operaciones criticas de plataforma en funciones SQL server-side.
+- Publishable Key solamente en el navegador. Nunca Secret Key.
+- Modulos: alumnos, instructores, asistencia, pagos, examenes, competencias, avisos, programa tecnico, credenciales, reportes y configuracion.
+- Expediente individual del alumno.
+- Programa tecnico de Makoto-No-Kai incluido como fuente de referencia.
+- Marca JSF & MAFIGO separada de la identidad del dojo.
+
+ORDEN DE INSTALACION EN SUPABASE:
+1. La base Stage 2 debe estar ya creada.
+2. Ejecutar 04_PRODUCCION_SEGURIDAD_FINAL.sql de esta V4.
+3. Esta V4 crea automaticamente las tablas opcionales del expediente y de plataforma que falten.
+
+IMPORTANTE:
+- La cuenta administradora debe existir en Authentication > Users.
+- El correo predeterminado del script es julio.salazar.flores@hotmail.com.
+- Si se usa otra cuenta, cambiar solo ese correo antes de ejecutar el punto 5.
+- La Publishable Key se coloca en la aplicacion. No colocar Secret Key.
+- La aplicacion cliente no recibe service_role ni Secret Key.
+
+PRUEBAS OBLIGATORIAS ANTES DEL PRIMER EVENTO:
+1. Entrar con la cuenta JSF & MAFIGO y verificar Administracion.
+2. Crear/editar una organizacion.
+3. Crear una cuenta de profesor en Auth y asignarla a una organizacion.
+4. Entrar como profesor y comprobar que solo ve su organizacion.
+5. Comprobar que una organizacion suspendida o vencida no permite operar.
+6. Comprobar que el profesor no ve Administracion JSF & MAFIGO.
+7. Comprobar que un profesor no puede consultar ni modificar datos de otra organizacion.
+8. Comprobar alumnos, pagos, asistencia, examenes, competencias, avisos, credenciales y programa tecnico.
+9. Hacer respaldo y probar restauracion fuera de la cuenta de produccion.
+
+LIMITACION TECNICA IMPORTANTE:
+La interfaz web se ejecuta en el navegador, por lo que el codigo frontend siempre puede ser inspeccionado como cualquier aplicacion web. La proteccion real de los datos y operaciones se hace con Auth, RLS y funciones server-side de Supabase. El repositorio y los secretos de infraestructura deben permanecer privados bajo control de JSF & MAFIGO.

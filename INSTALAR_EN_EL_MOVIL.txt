@@ -1,0 +1,12 @@
+JSF & MAFIGO SPORT SYSTEMS — INSTALACIÓN EN EL MÓVIL
+
+1. Publica esta carpeta en un sitio HTTPS (por ejemplo GitHub Pages).
+2. Abre la dirección HTTPS desde Chrome en el teléfono.
+3. Inicia sesión con la cuenta correspondiente.
+4. En Chrome toca ⋮ y elige “Instalar aplicación” o “Añadir a pantalla de inicio”.
+5. La aplicación aparecerá como una app independiente.
+
+IMPORTANTE:
+- No se debe abrir como archivo local file:// para instalarla como PWA.
+- El archivo supabase-config.js debe contener la URL y la Publishable Key de Supabase.
+- Nunca pongas la Secret Key/service_role en el navegador.

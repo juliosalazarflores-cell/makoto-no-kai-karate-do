@@ -1,24 +1,15 @@
 {
-  "name": "Makoto No Kai Karate Do",
-  "short_name": "Makoto No Kai",
-  "description": "Sistema de gestión para el dojo Makoto No Kai Karate Do.",
+  "name": "JSF & MAFIGO Sport Systems",
+  "short_name": "JSF & MAFIGO",
+  "description": "Sistema profesional de gestión deportiva",
   "start_url": "./",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#111827",
-  "orientation": "portrait-primary",
+  "orientation": "any",
+  "background_color": "#071225",
+  "theme_color": "#071225",
   "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
+    {"src":"assets/1000342094(2).png","sizes":"512x512","type":"image/png","purpose":"any maskable"},
+    {"src":"assets/jsf-mafigo-logo.png","sizes":"512x512","type":"image/png","purpose":"any"}
   ]
 }
