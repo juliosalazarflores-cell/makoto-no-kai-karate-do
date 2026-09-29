@@ -19,10 +19,11 @@ body.orgMode .platformReference{display:none!important}
 .clientCredit{display:none}
 body.orgMode .clientCredit{display:block;position:fixed;right:10px;bottom:7px;color:#718198;font-size:9px;opacity:.72;z-index:5}
 
-<style>.teamGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:16px}.teamCard{background:linear-gradient(180deg,#132238,#0f1b2d);border:1px solid #263953;border-radius:16px;padding:14px;text-align:center}.teamPhoto{width:92px;height:92px;border-radius:50%;object-fit:cover;object-position:center top;border:3px solid #ffd34f;display:block;margin:0 auto 10px;background:#0b1628}.teamName{font-weight:800;font-size:14px;line-height:1.25}.teamRole{color:#9eabc0;font-size:12px;margin-top:5px;line-height:1.3}.instructorPhoto{width:48px;height:48px;border-radius:50%;object-fit:cover;object-position:center top;border:2px solid #ffd34f;vertical-align:middle;margin-right:8px;background:#0b1628}@media(max-width:900px){.teamGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:520px){.teamGrid{grid-template-columns:1fr}.teamPhoto{width:84px;height:84px}}</style>.nav{min-width:0}.sidebar{overflow-x:hidden}.nav{overflow-wrap:anywhere}.content{overflow-x:hidden}
+ .teamGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:16px}.teamCard{background:linear-gradient(180deg,#132238,#0f1b2d);border:1px solid #263953;border-radius:16px;padding:14px;text-align:center}.teamPhoto{width:92px;height:92px;border-radius:50%;object-fit:cover;object-position:center top;border:3px solid #ffd34f;display:block;margin:0 auto 10px;background:#0b1628}.teamName{font-weight:800;font-size:14px;line-height:1.25}.teamRole{color:#9eabc0;font-size:12px;margin-top:5px;line-height:1.3}.instructorPhoto{width:48px;height:48px;border-radius:50%;object-fit:cover;object-position:center top;border:2px solid #ffd34f;vertical-align:middle;margin-right:8px;background:#0b1628}@media(max-width:900px){.teamGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:520px){.teamGrid{grid-template-columns:1fr}.teamPhoto{width:84px;height:84px}}.nav{min-width:0}.sidebar{overflow-x:hidden}.nav{overflow-wrap:anywhere}.content{overflow-x:hidden}
 @media(max-width:900px){body.orgMode .sidebar{overflow-y:auto;max-height:calc(100vh - 62px)}body.orgMode .content{min-width:0}.metric{min-width:0}.metric span{overflow-wrap:anywhere}}
 </style>
 <style id="mobile-layout-fix">
+/* Corrección responsive final: escritorio intacto, móvil usable y sin CSS visible */
 @media (max-width:700px){
   html,body{width:100%;max-width:100%;overflow-x:hidden;}
   .banner{height:70px;}
@@ -33,24 +34,79 @@ body.orgMode .clientCredit{display:block;position:fixed;right:10px;bottom:7px;co
   .user{flex:0 0 auto;gap:6px;}
   .user .avatar{width:32px;height:32px;}
   .user .btn{padding:8px 10px;font-size:12px;}
-  .layout{display:flex;min-width:0;width:100%;min-height:calc(100vh - 130px);}
-  .sidebar{width:64px!important;flex:0 0 64px!important;padding:8px 5px!important;overflow:hidden;}
-  .nav{width:54px!important;height:48px;padding:0!important;margin:2px 0!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:0!important;line-height:1!important;white-space:nowrap;overflow:hidden;}
-  .nav:first-letter{font-size:22px;}
-  .content{width:calc(100% - 64px);min-width:0;max-width:calc(100% - 64px);padding:10px 8px 24px!important;overflow:hidden;}
-  .hero{padding:16px 12px;gap:10px;align-items:center;}
+
+  /* En teléfono el menú pasa arriba del contenido para no aplastarlo. */
+  .layout{display:block;width:100%;min-width:0;min-height:calc(100vh - 130px);}
+  .sidebar{
+    width:100%!important;
+    flex:none!important;
+    height:auto!important;
+    max-height:none!important;
+    display:flex!important;
+    align-items:center;
+    gap:6px;
+    padding:8px!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    border-right:0;
+    border-bottom:1px solid #22364f;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:thin;
+  }
+  .sidebar::-webkit-scrollbar{height:4px;}
+  .nav{
+    width:auto!important;
+    min-width:max-content!important;
+    height:auto!important;
+    flex:0 0 auto!important;
+    padding:10px 12px!important;
+    margin:0!important;
+    display:block!important;
+    font-size:12px!important;
+    line-height:1.2!important;
+    text-align:left!important;
+    white-space:nowrap!important;
+    overflow:visible!important;
+    overflow-wrap:normal!important;
+  }
+  .content{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    padding:10px 8px 24px!important;
+    overflow-x:hidden!important;
+  }
+  .hero{padding:16px 12px;gap:12px;align-items:flex-start;}
   .hero h1{font-size:20px;line-height:1.15;overflow-wrap:anywhere;}
   .hero p{font-size:13px;line-height:1.3;}
-  .heroLogo{width:82px;height:70px;flex:0 0 82px;}
+  .heroLogo{width:90px;height:76px;flex:0 0 90px;align-self:center;}
   .cards{grid-template-columns:1fr!important;gap:10px;margin:10px 0;}
-  .metric{min-height:78px;padding:15px;}
+  .metric{min-height:78px;padding:15px;min-width:0;}
   .metric b{font-size:26px;}
+  .metric span{overflow-wrap:anywhere;}
   .sectionGrid{grid-template-columns:1fr!important;}
-  .panel{max-width:100%;}
-  .panelHead{padding:13px 14px;flex-wrap:wrap;}
-  .tableWrap{max-width:100%;overflow-x:auto;}
+  .panel{max-width:100%;min-width:0;}
+  .panelHead{padding:13px 14px;flex-wrap:wrap;gap:8px;}
+  .panelHead h3{font-size:17px;}
+  .tableWrap{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .table{min-width:620px;}
+  .toolbar{align-items:stretch;}
+  .toolbar input,.toolbar select{min-width:0;width:100%;}
+  .formGrid,.formGrid.three,.detailGrid,.metricGrid{grid-template-columns:1fr!important;}
+  .profileHero{grid-template-columns:75px 1fr;}
+  .profileHero .heroActions{grid-column:1/-1;}
+  .avatarInitial{width:75px;height:75px;}
+  .programGrid{grid-template-columns:1fr;}
+  .teamGrid{grid-template-columns:1fr!important;}
   .footer{display:none!important;}
   .clientCredit{font-size:8px;right:5px;bottom:4px;max-width:75vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+}
+@media(max-width:430px){
+  .brand b{font-size:11px;}
+  .user .btn{padding:7px 9px;}
+  .hero h1{font-size:19px;}
+  .heroLogo{width:82px;height:70px;flex-basis:82px;}
+  .nav{font-size:12px!important;padding:9px 11px!important;}
 }
 </style>
 </head><body>
