@@ -1,0 +1,14 @@
+CORRECCIONES DASHBOARD - 4 OCTUBRE 2026
+
+1. Haz una copia de tu carpeta del proyecto.
+2. Copia index.html, sw.js y service-worker.js del ZIP a la carpeta del repositorio makoto-no-kai-karate-do. Acepta reemplazar esos tres archivos.
+3. Conserva assets, database y supabase-config.js.
+4. Mueve las copias index - copia.html, index - copia (2).html, index(2).html, index_actual.html e index_anterior.html a una carpeta _archive. No son el archivo de entrada.
+5. En GitHub Desktop, revisa los cambios y haz Commit y Push.
+6. Espera que pages build and deployment termine en verde antes de abrir el sitio.
+
+Incluye: menú administrativo oculto a usuarios sin rol, ajustes de cabecera y expediente, impresión del expediente, limpieza de reglas móviles contradictorias, advertencia de carga incompleta y actualización de caché.
+Verificado: sintaxis JavaScript y pruebas de lógica con consultas simuladas. La prueba visual en navegador no pudo ejecutarse.
+Pendiente: clave publicable de Supabase para configurar acceso automático en dispositivos nuevos. El ZIP conserva el comportamiento de conexión existente.
+No modifica datos de Supabase ni políticas de acceso.
+GitHub rechazó la publicación directa con error 403. Estos archivos todavía no están publicados.
